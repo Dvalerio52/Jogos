@@ -6,6 +6,7 @@ context.scale(20, 20);
 
 let score = 0;
 let lines = 0;
+let level = 1; // NOVO: Controle de nível inicial
 let currentPlayerName = "";
 
 const matrixGrid = createMatrix(12, 24); // Grade do jogo: 12 colunas x 24 linhas
@@ -144,6 +145,7 @@ function gridSweep() {
         matrixGrid.unshift(row);
         ++y;
 
+        // Bonificação por limpar múltiplas linhas de uma vez só (Tetris)
         score += rowCount * 10;
         lines += 1;
         rowCount *= 2;
@@ -151,7 +153,7 @@ function gridSweep() {
 }
 
 let dropCounter = 0;
-let dropInterval = 1000; // Velocidade inicial de queda (1 segundo)
+let dropInterval = 1000; // Velocidade base do Nível 1 (1 segundo)
 let lastTime = 0;
 
 function updateGame(time = 0) {
@@ -220,13 +222,14 @@ function resetPlayerPiece() {
 
     // Condição de Game Over
     if (collide(matrixGrid, playerPiece)) {
-        alert(`💥 GAME OVER! Você fez ${score} pontos.`);
+        alert(`💥 GAME OVER! Você fez ${score} pontos e alcançou o Nível ${level}.`);
         saveRanking();
         
-        // Limpa a matriz do mapa e reseta scores
+        // Limpa o tabuleiro e reinicia os contadores
         matrixGrid.forEach(row => row.fill(0));
         score = 0;
         lines = 0;
+        level = 1;
         
         loginScreen.classList.remove('hidden');
         mainGameContainer.classList.add('hidden');
@@ -234,11 +237,17 @@ function resetPlayerPiece() {
     }
 }
 
+// ATUALIZADO: Mecânica de aceleração agressiva por níveis baseada em pontos
 function updateScore() {
-    scoreDisplay.textContent = score;
+    // Calcula o nível atual: a cada 100 pontos o nível sobe 1
+    level = Math.floor(score / 100) + 1;
+    
+    scoreDisplay.textContent = `${score} (Nível ${level})`;
     linesDisplay.textContent = lines;
-    // Aumenta a velocidade de queda conforme o jogador pontua (Deixa o jogo mais iterativo/difícil)
-    dropInterval = Math.max(100, 1000 - (lines * 50));
+    
+    // FÓRMULA DE ACELERAÇÃO: Começa em 1000ms. Cada nível subtrai 100ms da queda. 
+    // Garante que o limite mínimo seja de 80ms (velocidade quase instantânea no nível 10).
+    dropInterval = Math.max(80, 1000 - (level - 1) * 100);
 }
 
 // Sistema de Persistência do Placar de Líderes
