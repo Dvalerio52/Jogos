@@ -1,28 +1,69 @@
-// Banco de dados dinâmico de atualidades (pode atualizar as notícias quando quiser)
-const newsData = [
-    { id: 1, content: "Exploração de Marte 🚀" },
-    { id: 2, content: "Nova IA Avançada 🤖" },
-    { id: 3, content: "Crise Climática Global 🌍" },
-    { id: 4, content: "Olimpíadas / Esportes 🏆" },
-    { id: 5, content: "Fusão Nuclear Comercial ⚡" },
-    { id: 6, content: "Avanço na Medicina Genética 🧬" }
+// Banco de dados de cartas temáticas (Notícias/Atualidades)
+const allCardsData = [
+    { name: 'ia', content: '🤖' }, { name: 'ia', content: 'IA' },
+    { name: 'clima', content: '🌍' }, { name: 'clima', content: 'Clima' },
+    { name: 'espaco', content: '🚀' }, { name: 'espaco', content: 'Espaço' },
+    { name: 'crypto', content: '🪙' }, { name: 'crypto', content: 'Cripto' },
+    { name: 'saude', content: '🧬' }, { name: 'saude', content: 'Saúde' },
+    { name: 'tecnologia', content: '💻' }, { name: 'tecnologia', content: 'Tech' },
+    { name: 'esporte', content: '⚽' }, { name: 'esporte', content: 'Esporte' },
+    { name: 'arte', content: '🎨' }, { name: 'arte', content: 'Arte' }
 ];
 
-// Duplicar os dados para criar os pares do jogo da memória
-let cardsArray = [...newsData, ...newsData];
+const configPhases = {
+    facil: { pairs: 4, gridClass: 'grid-facil' },
+    medio: { pairs: 6, gridClass: 'grid-medio' },
+    dificil: { pairs: 8, gridClass: 'grid-dificil' }
+};
 
+let moves = 0;
 let firstCard = null;
 let secondCard = null;
 let lockBoard = false;
-let attempts = 0;
-let matches = 0;
+let matchesFound = 0;
+let currentPairsCount = 4;
 
-const grid = document.getElementById('game-grid');
-const attemptsEl = document.getElementById('attempts');
-const matchesEl = document.getElementById('matches');
+const gameGrid = document.getElementById('game-grid');
+const movesCounter = document.getElementById('moves-counter');
+const currentPhaseText = document.getElementById('current-phase');
+const phaseSelect = document.getElementById('phase-select');
 const resetBtn = document.getElementById('reset-btn');
 
-// Função para embaralhar as cartas (Algoritmo Fisher-Yates)
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    initGame();
+    renderRanking();
+    
+    phaseSelect.addEventListener('change', (e) => {
+        initGame();
+    });
+    
+    resetBtn.addEventListener('click', initGame);
+});
+
+function initGame() {
+    const selectedPhase = phaseSelect.value;
+    const config = configPhases[selectedPhase];
+    
+    currentPairsCount = config.pairs;
+    currentPhaseText.textContent = `Fase: ${selectedPhase.toUpperCase()}`;
+    
+    // Atualiza classe do Grid no CSS para responsividade
+    gameGrid.className = `game-grid ${config.gridClass}`;
+    
+    moves = 0;
+    matchesFound = 0;
+    movesCounter.textContent = `Movimentos: ${moves}`;
+    resetCardSelection();
+    
+    // Filtra e embaralha as cartas para a fase correspondente
+    const selectedKeys = [...new Set(allCardsData.map(c => c.name))].slice(0, currentPairsCount);
+    const filteredCards = allCardsData.filter(card => selectedKeys.includes(card.name));
+    const gameCards = shuffle([...filteredCards]);
+    
+    createGrid(gameCards);
+}
+
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -31,93 +72,108 @@ function shuffle(array) {
     return array;
 }
 
-// Inicializar e renderizar o tabuleiro
-function createBoard() {
-    grid.innerHTML = "";
-    shuffle(cardsArray);
-    
-    cardsArray.forEach((item) => {
+function createGrid(cards) {
+    gameGrid.innerHTML = '';
+    cards.forEach(cardData => {
         const card = document.createElement('div');
         card.classList.add('card');
-        card.dataset.id = item.id;
-
+        card.dataset.name = cardData.name;
+        
         card.innerHTML = `
-            <div class="card-back"></div>
-            <div class="card-front">${item.content}</div>
+            <div class="front">${cardData.content}</div>
+            <div class="back">❓</div>
         `;
-
+        
         card.addEventListener('click', flipCard);
-        grid.appendChild(card);
+        gameGrid.appendChild(card);
     });
 }
 
-// Virar a carta
 function flipCard() {
-    if (lockBoard) return;
-    if (this === firstCard) return;
-
+    if (lockBoard || this === firstCard || this.classList.contains('flipped')) return;
+    
     this.classList.add('flipped');
-
+    
     if (!firstCard) {
         firstCard = this;
         return;
     }
-
+    
     secondCard = this;
-    checkForMatch();
+    updateMoves();
+    checkMatch();
 }
 
-// Verificar se as duas cartas viradas são iguais
-function checkForMatch() {
-    attempts++;
-    attemptsEl.textContent = attempts;
+function updateMoves() {
+    moves++;
+    movesCounter.textContent = `Movimentos: ${moves}`;
+}
 
-    let isMatch = firstCard.dataset.id === secondCard.dataset.id;
+function checkMatch() {
+    const isMatch = firstCard.dataset.name === secondCard.dataset.name;
     isMatch ? disableCards() : unflipCards();
 }
 
-// Se forem iguais, mantém viradas e desabilita o clique nelas
 function disableCards() {
-    matches++;
-    matchesEl.textContent = matches;
-    
     firstCard.removeEventListener('click', flipCard);
     secondCard.removeEventListener('click', flipCard);
-
-    resetTurn();
-
-    if (matches === newsData.length) {
-        setTimeout(() => alert(`Parabéns! Você detonou no Arcade de Atualidades em ${attempts} tentativas!`), 500);
+    matchesFound++;
+    
+    if (matchesFound === currentPairsCount) {
+        setTimeout(handleWin, 500);
     }
+    resetCardSelection();
 }
 
-// Se não forem iguais, desvira após um breve intervalo
 function unflipCards() {
     lockBoard = true;
-
     setTimeout(() => {
         firstCard.classList.remove('flipped');
         secondCard.classList.remove('flipped');
-        resetTurn();
+        resetCardSelection();
     }, 1000);
 }
 
-function resetTurn() {
-    [firstCard, secondCard] = [null, null];
-    lockBoard = false;
+function resetCardSelection() {
+    [firstCard, secondCard, lockBoard] = [null, null, false];
 }
 
-// Reiniciar o jogo do zero
-function resetGame() {
-    attempts = 0;
-    matches = 0;
-    attemptsEl.textContent = attempts;
-    matchesEl.textContent = matches;
-    resetTurn();
-    createBoard();
+// Sistema de Ranking Local (Persistência com LocalStorage)
+function handleWin() {
+    const playerName = prompt(`🎉 Parabéns! Você terminou a fase com ${moves} movimentos.\nDigite seu nome para o Ranking:`) || "Anônimo";
+    
+    const newRecord = {
+        name: playerName,
+        phase: phaseSelect.value.toUpperCase(),
+        moves: moves,
+        date: new Date().toLocaleDateString('pt-BR')
+    };
+    
+    let ranking = JSON.parse(localStorage.getItem('arcade_ranking')) || [];
+    ranking.push(newRecord);
+    
+    // Ordena por menor número de movimentos (melhor score)
+    ranking.sort((a, b) => a.moves - b.moves);
+    
+    // Guarda apenas o Top 5 geral para manter o desafio alto
+    ranking = ranking.slice(0, 5);
+    
+    localStorage.setItem('arcade_ranking', JSON.stringify(ranking));
+    renderRanking();
 }
 
-resetBtn.addEventListener('click', resetGame);
-
-// Inicia o jogo ao carregar a página
-createBoard();
+function renderRanking() {
+    const rankingBody = document.getElementById('ranking-body');
+    const ranking = JSON.parse(localStorage.getItem('arcade_ranking')) || [];
+    
+    rankingBody.innerHTML = ranking.length === 0 
+        ? `<tr><td colspan="4" style="text-align:center;">Nenhum recorde ainda. Seja o primeiro!</td></tr>`
+        : ranking.map((player, index) => `
+            <tr>
+                <td>${index + 1}º</td>
+                <td><strong>${player.name}</strong></td>
+                <td>${player.phase}</td>
+                <td>${player.moves} mvs</td>
+            </tr>
+          `).join('');
+}

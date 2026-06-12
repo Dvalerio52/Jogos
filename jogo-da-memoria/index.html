@@ -1,26 +1,49 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Arcade de Atualidades: Jogo da Memória</title>
+    <title>Notícias em Mente - Arcade</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Notícias em Mente 🧠</h1>
-        <p>Combine as manchetes/imagens das atualidades recentes!</p>
-        <div class="score-board">
-            <span>Tentativas: <strong id="attempts">0</strong></span>
-            <span>Acertos: <strong id="matches">0</strong></span>
-        </div>
-        <button id="reset-btn">Reiniciar Jogo</button>
-    </header>
+    <div class="game-container">
+        <header>
+            <h1>🧠 Notícias em Mente</h1>
+            <div class="status-panel">
+                <span id="moves-counter">Movimentos: 0</span>
+                <span id="current-phase">Fase: Fácil</span>
+            </div>
+            
+            <div class="controls">
+                <select id="phase-select">
+                    <option value="facil">Fase 1: Fácil (8 cartas)</option>
+                    <option value="medio">Fase 2: Médio (12 cartas)</option>
+                    <option value="dificil">Fase 3: Difícil (16 cartas)</option>
+                </select>
+                <button id="reset-btn">Reiniciar</button>
+            </div>
+        </header>
 
-    <main class="game-container">
-        <div class="game-grid" id="game-grid"></div>
-    </main>
+        <main class="game-grid" id="game-grid"></main>
 
-   <script src="script.js"></script>
+        <section class="ranking-container">
+            <h2>🏆 Ranking Local (Melhores Tempos)</h2>
+            <table id="ranking-table">
+                <thead>
+                    <tr>
+                        <th>Posição</th>
+                        <th>Nome</th>
+                        <th>Fase</th>
+                        <th>Movimentos</th>
+                    </tr>
+                </thead>
+                <tbody id="ranking-body">
+                    </tbody>
+            </table>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
