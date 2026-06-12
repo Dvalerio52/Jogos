@@ -4,11 +4,12 @@ Bem-vindo ao repositório do meu ecossistema de jogos clássicos! Este projeto f
 
 ## 🚀 Como Jogar (Acesso Rápido)
 
-Os jogos estão hospedados e prontos para rodar direto no seu navegador. Escolha um e desafie o placar de líderes:
+Os jogos estão hospedados e prontos para rodar direto no seu navegador. Caso um link não abra, certifique-se de clicar no caminho correspondente à estrutura de pastas:
 
-*   🧠 **Jogo da Memória:** [Acessar Jogo](https://dvalerio52.github.io/Jogos/)
+*   🧠 **Jogo da Memória:** [Acessar Jogo](https://dvalerio52.github.io/Jogos/) ou pelo caminho direto: [Clique Aqui](https://dvalerio52.github.io/Jogos/index.html)
 *   🧱 **Retro Tetris Arcade:** [Acessar Jogo](https://dvalerio52.github.io/Jogos/tetris/)
 *   🟡 **Pac-Man Clássico:** [Acessar Jogo](https://dvalerio52.github.io/Jogos/pac-man/)
+
 
 ---
 
