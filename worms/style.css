@@ -1,0 +1,70 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    /* Desativa o menu de seleção de texto para não atrapalhar a jogabilidade */
+    user-select: none; 
+}
+
+body {
+    background-color: #121214;
+    color: #e1e1e6;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* Evita barras de rolagem fantasmas durante o gameplay */
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 840px;
+    padding: 20px;
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.game-header h1 {
+    font-size: 1.5rem;
+    color: #4cc9f0;
+    margin-bottom: 5px;
+}
+
+.game-header p {
+    font-size: 0.9rem;
+    color: #8f8f9d;
+}
+
+kbd {
+    background: #29292e;
+    border: 1px solid #4d4d57;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    color: #fff;
+}
+
+/* Wrapper para manter a proporção do aspecto do canvas perfeita e responsiva */
+.canvas-wrapper {
+    width: 100%;
+    background-color: #000;
+    border: 4px solid #29292e;
+    border-radius: 6px;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    display: flex;
+}
+
+canvas {
+    width: 100%;
+    height: auto;
+    background-color: #87CEEB; /* Cor de fallback do céu */
+    cursor: crosshair;
+}
