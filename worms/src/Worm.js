@@ -19,6 +19,7 @@ export class Worm {
             this.vy += this.gravity;
         }
 
+        // [O TRECHO QUE VOCÊ PERGUNTOU ENTRA EXATAMENTE AQUI]
         // Processa comandos apenas se for o turno desta minhoca
         if (this.isControlled) {
             if (input.isPressed('arrowleft') || input.isPressed('a')) {
