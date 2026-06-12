@@ -3,8 +3,7 @@ import { InputManager } from './Input.js';
 import { TerrainManager } from './Terrain.js';
 import { Worm } from './Worm.js';
 import { Projectile } from './Projectile.js'; 
-import { GameManager } from './GameManager.js'; 
-
+import { GameManager } from './GameManager.js';
 export class GameEngine {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
