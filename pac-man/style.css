@@ -1,9 +1,9 @@
 body {
     margin: 0;
     padding: 10px;
-    background-color: #0c0c0e;
-    color: #f3f4f6;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'Courier New', Courier, monospace;
     display: flex;
     justify-content: center;
     box-sizing: border-box;
@@ -25,71 +25,75 @@ body {
 }
 
 .modal-box {
-    background: #14141d;
+    background: #111111;
     padding: 25px;
-    border-radius: 12px;
+    border-radius: 4px;
     text-align: center;
-    max-width: 350px;
+    max-width: 360px;
     width: 90%;
-    border: 2px solid #ffd43b;
-    box-shadow: 0 0 20px rgba(255, 212, 59, 0.3);
+    border: 2px solid #2121ff;
+    box-shadow: 0 0 15px rgba(33, 33, 255, 0.5);
 }
 
-.modal-box h2 { color: #ffd43b; margin-top: 0; }
+.modal-box h2 { color: #ffff00; margin-top: 0; font-size: 1.5rem; }
 
 .modal-box input {
     width: 100%;
     padding: 12px;
     margin: 15px 0;
-    border-radius: 6px;
-    border: 1px solid #2c2c35;
-    background: #0c0c0e;
+    border: 1px solid #222222;
+    background: #000000;
     color: #fff;
     box-sizing: border-box;
     text-align: center;
     font-size: 1.1rem;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .modal-box button {
     width: 100%;
-    background: #ffd43b;
+    background: #ffff00;
     color: #000;
     font-weight: bold;
     border: none;
     padding: 12px;
-    border-radius: 6px;
     cursor: pointer;
     font-size: 1rem;
+    font-family: 'Courier New', Courier, monospace;
     text-transform: uppercase;
 }
 
 /* Painel de Controle Principal */
 .game-container {
     width: 100%;
-    max-width: 400px;
+    max-width: 460px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
 }
 
-h1 {
-    color: #ffd43b;
-    margin: 5px 0;
+header {
+    width: 100%;
     text-align: center;
-    font-size: 1.6rem;
+}
+
+header h1 {
+    color: #ffff00;
+    margin: 5px 0;
+    font-size: 2rem;
+    letter-spacing: 2px;
 }
 
 .scoreboard {
     width: 100%;
-    background: #14141d;
-    padding: 10px;
-    border-radius: 8px;
+    background: #000000;
+    padding: 8px;
     display: flex;
     justify-content: space-between;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     box-sizing: border-box;
-    border: 1px solid #222230;
+    border-bottom: 2px dashed #222222;
 }
 
 .arcade-layout {
@@ -97,40 +101,38 @@ h1 {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    gap: 12px;
+    gap: 10px;
 }
 
 /* Labirinto do Canvas */
 .canvas-area {
-    border: 3px solid #1971c2;
+    border: 4px solid #2121ff;
     background: #000;
-    border-radius: 8px;
-    overflow: hidden;
+    box-shadow: 0 0 20px rgba(33, 33, 255, 0.3);
 }
 
 canvas {
     display: block;
-    max-height: 50vh;
+    max-height: 62vh;
     max-width: 100%;
 }
 
-/* Controle Virtual em Formato de Cruz */
+/* Controle Virtual em Formato de Cruz (Mobile) */
 .mobile-controls {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 6px;
-    width: 180px;
-    height: 180px;
+    width: 150px;
+    height: 150px;
     margin: 5px 0;
 }
 
 .ctrl-btn {
-    background: #222230;
-    border: 1px solid #3b3b4f;
-    color: #fff;
-    font-size: 1.3rem;
-    border-radius: 10px;
+    background: #111111;
+    border: 2px solid #222222;
+    color: #ffff00;
+    font-size: 1.2rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -140,30 +142,30 @@ canvas {
 }
 
 .ctrl-btn:active {
-    background: #ffd43b;
-    color: #000;
+    background: #2121ff;
+    color: #fff;
 }
 
 .center-pad {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    color: #555;
 }
 
 /* Ranking de Líderes */
 .ranking-container {
     width: 100%;
-    background: #14141d;
-    padding: 12px;
-    border-radius: 8px;
+    background: #111111;
+    padding: 10px;
+    border: 1px solid #222222;
     box-sizing: border-box;
-    border: 1px solid #222230;
 }
 
 .ranking-container h3 {
     margin: 0 0 6px 0;
-    color: #40c057;
+    color: #00ff00;
     text-align: center;
     font-size: 0.9rem;
 }
@@ -175,9 +177,9 @@ table {
 }
 
 th, td {
-    padding: 6px;
+    padding: 5px;
     text-align: left;
-    border-bottom: 1px solid #222230;
+    border-bottom: 1px solid #222222;
 }
 
-th { color: #868e96; }
+th { color: #555555; }
