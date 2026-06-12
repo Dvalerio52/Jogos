@@ -1,65 +1,137 @@
-/* Adições para controle de fases e ranking */
-.status-panel {
+/* Definições de Reset e Fundo */
+body {
+    margin: 0;
+    padding: 20px;
+    background-color: #121214;
+    color: #e1e1e6;
+    font-family: Arial, sans-serif;
     display: flex;
-    justify-content: space-around;
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.controls {
-    display: flex;
-    gap: 10px;
     justify-content: center;
-    margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
-select, button {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    cursor: pointer;
+.hidden {
+    display: none !important;
 }
 
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
+/* Modais e Telas de Login */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
 }
 
-/* Modificadores de Grid por Fase */
-.grid-facil {
-    grid-template-columns: repeat(4, 1fr);
-    max-width: 400px;
-}
-
-.grid-medio {
-    grid-template-columns: repeat(4, 1fr);
-    max-width: 450px;
-}
-
-.grid-dificil {
-    grid-template-columns: repeat(4, 1fr);
-    max-width: 500px;
-}
-
-/* Estilização da Tabela de Ranking */
-.ranking-container {
-    margin-top: 30px;
-    background: #f8f9fa;
-    padding: 15px;
+.modal-box {
+    background: #202024;
+    padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    border: 2px solid #04d361;
+}
+
+.modal-box input {
+    width: 100%;
+    padding: 12px;
+    margin: 15px 0;
+    border-radius: 6px;
+    border: 1px solid #29292e;
+    background: #121214;
+    color: #fff;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.modal-box button {
+    width: 100%;
+    background: #04d361;
+    color: #000;
+    font-weight: bold;
+}
+
+/* Painel Principal do Jogo */
+.game-container {
     width: 100%;
     max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+header h1 {
+    text-align: center;
+    color: #04d361;
+    margin: 0 0 10px 0;
+}
+
+.status-panel {
+    display: flex;
+    justify-content: space-between;
+    background: #202024;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+}
+
+/* O TABULEIRO (Corrige o bug da imagem verticalizada) */
+.game-grid {
+    display: grid;
+    gap: 12px;
+    background: #202024;
+    padding: 15px;
+    border-radius: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* Estilo das Cartas */
+.card {
+    aspect-ratio: 1 / 1;
+    background-color: #29292e;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    user-select: none;
+    transition: transform 0.2s;
+    border: 1px solid #323238;
+}
+
+.card .front { display: none; font-size: 1.2rem; }
+.card .back { display: block; font-size: 1.5rem; color: #a8a8b3; }
+
+.card.flipped {
+    background-color: #e1e1e6;
+    color: #121214;
+}
+.card.flipped .front { display: block; }
+.card.flipped .back { display: none; }
+
+/* Tabela de Ranking */
+.ranking-container {
+    background: #202024;
+    padding: 15px;
+    border-radius: 12px;
 }
 
 .ranking-container h2 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    color: #ffd43b;
     text-align: center;
-    margin-bottom: 10px;
+    margin-top: 0;
 }
 
 table {
@@ -68,11 +140,17 @@ table {
 }
 
 th, td {
-    padding: 8px;
+    padding: 10px 8px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #29292e;
 }
 
-th {
-    background-color: #e9ecef;
+th { color: #8d8d99; text-transform: uppercase; }
+button {
+    padding: 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
 }

@@ -7,39 +7,44 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="game-container">
+    <!-- Tela de Login Inicial -->
+    <div id="login-screen" class="modal-overlay">
+        <div class="modal-box">
+            <h2>🧠 Notícias em Mente</h2>
+            <p>Prepare-se para o desafio de atualidades! Insira seu nome de jogador para iniciar a campanha:</p>
+            <input type="text" id="username-input" placeholder="Digite seu Nome ou Nick..." maxlength="15">
+            <button id="start-campaign-btn">Iniciar Jogo</button>
+        </div>
+    </div>
+
+    <div class="game-container hidden" id="main-game-container">
         <header>
             <h1>🧠 Notícias em Mente</h1>
             <div class="status-panel">
+                <span id="player-display">Jogador: </span>
                 <span id="moves-counter">Movimentos: 0</span>
-                <span id="current-phase">Fase: Fácil</span>
-            </div>
-            
-            <div class="controls">
-                <select id="phase-select">
-                    <option value="facil">Fase 1: Fácil (8 cartas)</option>
-                    <option value="medio">Fase 2: Médio (12 cartas)</option>
-                    <option value="dificil">Fase 3: Difícil (16 cartas)</option>
-                </select>
-                <button id="reset-btn">Reiniciar</button>
+                <span id="current-phase">Fase: 1/3</span>
             </div>
         </header>
 
+        <!-- Tabuleiro -->
         <main class="game-grid" id="game-grid"></main>
 
+        <!-- Ranking -->
         <section class="ranking-container">
-            <h2>🏆 Ranking Local (Melhores Tempos)</h2>
+            <h2>🏆 Hall da Fama Arcade (Menos Movimentos)</h2>
             <table id="ranking-table">
                 <thead>
                     <tr>
                         <th>Posição</th>
                         <th>Nome</th>
-                        <th>Fase</th>
-                        <th>Movimentos</th>
+                        <th>Pontuação Total</th>
+                        <th>Data</th>
                     </tr>
                 </thead>
                 <tbody id="ranking-body">
-                    </tbody>
+                    <!-- Gerado dinamicamente -->
+                </tbody>
             </table>
         </section>
     </div>

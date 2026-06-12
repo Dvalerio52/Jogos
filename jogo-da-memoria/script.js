@@ -1,63 +1,82 @@
-// Banco de dados de cartas temáticas (Notícias/Atualidades)
+// Banco de dados de atualidades (Emojis e Textos)
 const allCardsData = [
     { name: 'ia', content: '🤖' }, { name: 'ia', content: 'IA' },
     { name: 'clima', content: '🌍' }, { name: 'clima', content: 'Clima' },
     { name: 'espaco', content: '🚀' }, { name: 'espaco', content: 'Espaço' },
     { name: 'crypto', content: '🪙' }, { name: 'crypto', content: 'Cripto' },
     { name: 'saude', content: '🧬' }, { name: 'saude', content: 'Saúde' },
-    { name: 'tecnologia', content: '💻' }, { name: 'tecnologia', content: 'Tech' },
+    { name: 'tech', content: '💻' }, { name: 'tech', content: 'Tech' },
     { name: 'esporte', content: '⚽' }, { name: 'esporte', content: 'Esporte' },
     { name: 'arte', content: '🎨' }, { name: 'arte', content: 'Arte' }
 ];
 
-const configPhases = {
-    facil: { pairs: 4, gridClass: 'grid-facil' },
-    medio: { pairs: 6, gridClass: 'grid-medio' },
-    dificil: { pairs: 8, gridClass: 'grid-dificil' }
-};
+// Configuração das fases sequenciais obrigatórias
+const campaignPhases = [
+    { level: 1, name: 'Fácil (Mundo Tech)', pairs: 4, gridClass: 'grid-4' },
+    { level: 2, name: 'Médio (Ciência & Economia)', pairs: 6, gridClass: 'grid-4' },
+    { level: 3, name: 'Difícil (Atualidades Geral)', pairs: 8, gridClass: 'grid-4' }
+];
 
-let moves = 0;
+let currentPhaseIndex = 0;
+let totalAccumulatedMoves = 0;
+let currentPhaseMoves = 0;
+let currentPlayerName = "";
+
 let firstCard = null;
 let secondCard = null;
 let lockBoard = false;
 let matchesFound = 0;
-let currentPairsCount = 4;
+
+const loginScreen = document.getElementById('login-screen');
+const mainGameContainer = document.getElementById('main-game-container');
+const usernameInput = document.getElementById('username-input');
+const startCampaignBtn = document.getElementById('start-campaign-btn');
 
 const gameGrid = document.getElementById('game-grid');
 const movesCounter = document.getElementById('moves-counter');
 const currentPhaseText = document.getElementById('current-phase');
-const phaseSelect = document.getElementById('phase-select');
-const resetBtn = document.getElementById('reset-btn');
+const playerDisplay = document.getElementById('player-display');
 
-// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
-    initGame();
     renderRanking();
     
-    phaseSelect.addEventListener('change', (e) => {
-        initGame();
+    startCampaignBtn.addEventListener('click', () => {
+        const name = usernameInput.value.trim();
+        if (!name) {
+            alert("Por favor, digite um nome válido para começar!");
+            return;
+        }
+        currentPlayerName = name;
+        playerDisplay.textContent = `Jogador: ${currentPlayerName}`;
+        
+        // Troca de telas
+        loginScreen.classList.add('hidden');
+        mainGameContainer.classList.remove('hidden');
+        
+        startCampaign();
     });
-    
-    resetBtn.addEventListener('click', initGame);
 });
 
-function initGame() {
-    const selectedPhase = phaseSelect.value;
-    const config = configPhases[selectedPhase];
-    
-    currentPairsCount = config.pairs;
-    currentPhaseText.textContent = `Fase: ${selectedPhase.toUpperCase()}`;
-    
-    // Atualiza classe do Grid no CSS para responsividade
-    gameGrid.className = `game-grid ${config.gridClass}`;
-    
-    moves = 0;
+function startCampaign() {
+    currentPhaseIndex = 0;
+    totalAccumulatedMoves = 0;
+    loadPhase(currentPhaseIndex);
+}
+
+function loadPhase(index) {
+    const phase = campaignPhases[index];
+    currentPhaseMoves = 0;
     matchesFound = 0;
-    movesCounter.textContent = `Movimentos: ${moves}`;
-    resetCardSelection();
     
-    // Filtra e embaralha as cartas para a fase correspondente
-    const selectedKeys = [...new Set(allCardsData.map(c => c.name))].slice(0, currentPairsCount);
+    // Atualiza cabeçalho e estrutura do Grid
+    currentPhaseText.textContent = `Fase: ${phase.level}/3 - ${phase.name}`;
+    movesCounter.textContent = `Movimentos: ${totalAccumulatedMoves} (Fase: 0)`;
+    gameGrid.className = `game-grid ${phase.gridClass}`;
+    
+    resetCardSelection();
+
+    // Filtra pares específicos para a fase
+    const selectedKeys = [...new Set(allCardsData.map(c => c.name))].slice(0, phase.pairs);
     const filteredCards = allCardsData.filter(card => selectedKeys.includes(card.name));
     const gameCards = shuffle([...filteredCards]);
     
@@ -105,8 +124,9 @@ function flipCard() {
 }
 
 function updateMoves() {
-    moves++;
-    movesCounter.textContent = `Movimentos: ${moves}`;
+    currentPhaseMoves++;
+    totalAccumulatedMoves++;
+    movesCounter.textContent = `Movimentos: ${totalAccumulatedMoves} (Fase: ${currentPhaseMoves})`;
 }
 
 function checkMatch() {
@@ -119,8 +139,9 @@ function disableCards() {
     secondCard.removeEventListener('click', flipCard);
     matchesFound++;
     
-    if (matchesFound === currentPairsCount) {
-        setTimeout(handleWin, 500);
+    const targetPairs = campaignPhases[currentPhaseIndex].pairs;
+    if (matchesFound === targetPairs) {
+        setTimeout(handlePhaseComplete, 600);
     }
     resetCardSelection();
 }
@@ -138,42 +159,53 @@ function resetCardSelection() {
     [firstCard, secondCard, lockBoard] = [null, null, false];
 }
 
-// Sistema de Ranking Local (Persistência com LocalStorage)
-function handleWin() {
-    const playerName = prompt(`🎉 Parabéns! Você terminou a fase com ${moves} movimentos.\nDigite seu nome para o Ranking:`) || "Anônimo";
-    
-    const newRecord = {
-        name: playerName,
-        phase: phaseSelect.value.toUpperCase(),
-        moves: moves,
+function handlePhaseComplete() {
+    if (currentPhaseIndex < campaignPhases.length - 1) {
+        alert(`🏆 Você passou da Fase ${currentPhaseIndex + 1}!\nClique para ir para a próxima fase.`);
+        currentPhaseIndex++;
+        loadPhase(currentPhaseIndex);
+    } else {
+        // Chegou ao fim de todas as fases
+        alert(`🎉 CAMPANHA CONCLUÍDA, ${currentPlayerName}!\nSua pontuação total final foi de ${totalAccumulatedMoves} movimentos.`);
+        saveToRanking();
+        
+        // Retorna para a tela de login para uma nova rodada se quiser
+        loginScreen.classList.remove('hidden');
+        mainGameContainer.classList.add('hidden');
+        usernameInput.value = "";
+    }
+}
+
+function saveToRanking() {
+    const record = {
+        name: currentPlayerName,
+        score: totalAccumulatedMoves,
         date: new Date().toLocaleDateString('pt-BR')
     };
     
-    let ranking = JSON.parse(localStorage.getItem('arcade_ranking')) || [];
-    ranking.push(newRecord);
+    let ranking = JSON.parse(localStorage.getItem('arcade_campaign_ranking')) || [];
+    ranking.push(record);
     
-    // Ordena por menor número de movimentos (melhor score)
-    ranking.sort((a, b) => a.moves - b.moves);
+    // Organiza do menor número de movimentos para o maior
+    ranking.sort((a, b) => a.score - b.score);
+    ranking = ranking.slice(0, 5); // Mantém o Top 5
     
-    // Guarda apenas o Top 5 geral para manter o desafio alto
-    ranking = ranking.slice(0, 5);
-    
-    localStorage.setItem('arcade_ranking', JSON.stringify(ranking));
+    localStorage.setItem('arcade_campaign_ranking', JSON.stringify(ranking));
     renderRanking();
 }
 
 function renderRanking() {
     const rankingBody = document.getElementById('ranking-body');
-    const ranking = JSON.parse(localStorage.getItem('arcade_ranking')) || [];
+    const ranking = JSON.parse(localStorage.getItem('arcade_campaign_ranking')) || [];
     
     rankingBody.innerHTML = ranking.length === 0 
-        ? `<tr><td colspan="4" style="text-align:center;">Nenhum recorde ainda. Seja o primeiro!</td></tr>`
+        ? `<tr><td colspan="4" style="text-align:center;">Nenhum recorde registrado. Seja o pioneiro!</td></tr>`
         : ranking.map((player, index) => `
             <tr>
                 <td>${index + 1}º</td>
                 <td><strong>${player.name}</strong></td>
-                <td>${player.phase}</td>
-                <td>${player.moves} mvs</td>
+                <td>${player.score} mvs</td>
+                <td>${player.date}</td>
             </tr>
           `).join('');
 }
