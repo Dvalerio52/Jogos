@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Come-Come Arcade - Portfólio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-screen" class="modal-overlay">
+        <div class="modal-box">
+            <h2>🟡 Come-Come Retro</h2>
+            <p>Devore todas as pastilhas e fuja dos fantasmas! Insira seu nome de jogador:</p>
+            <input type="text" id="username-input" placeholder="Seu Nickname..." maxlength="12">
+            <button id="start-game-btn">Iniciar Partida</button>
+        </div>
+    </div>
+
+    <div class="game-container hidden" id="main-game-container">
+        <header>
+            <h1>🟡 COME-COME</h1>
+            <div class="scoreboard">
+                <div>Jogador: <span id="player-name-display">---</span></div>
+                <div>Pontos: <span id="score-display">0</span></div>
+                <div>Vidas: <span id="lives-display">❤️ ❤️ ❤️</span></div>
+            </div>
+        </header>
+
+        <div class="arcade-layout">
+            <div class="canvas-area">
+                <canvas id="game-canvas" width="380" height="380"></canvas>
+            </div>
+
+            <div class="mobile-controls">
+                <div></div>
+                <button class="ctrl-btn" id="ctrl-up">▲</button>
+                <div></div>
+                <button class="ctrl-btn" id="ctrl-left">◀</button>
+                <div class="center-pad">🎮</div>
+                <button class="ctrl-btn" id="ctrl-right">▶</button>
+                <div></div>
+                <button class="ctrl-btn" id="ctrl-down">▼</button>
+                <div></div>
+            </div>
+
+            <section class="ranking-container">
+                <h3>🏆 TOP 5 RECORDES</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pos</th>
+                            <th>Nome</th>
+                            <th>Pontos</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ranking-body">
+                        </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
